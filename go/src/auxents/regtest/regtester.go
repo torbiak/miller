@@ -18,6 +18,7 @@ import (
 
 const DefaultPath = "./regtest/cases"
 const CmdName = "cmd"
+const MlrName = "mlr"
 const EnvName = "env"
 const PreCopyName = "precopy"
 const ExpectedStdoutName = "expout"
@@ -316,6 +317,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 	}
 
 	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
+	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName
 	preCopyFileName := caseDir + slash + PreCopyName
 	expectedStdoutFileName := caseDir + slash + ExpectedStdoutName
@@ -334,6 +336,12 @@ func (regtester *RegTester) executeSingleCmdFile(
 	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
+
+		mlr, err := this.loadFile(mlrFileName, caseDir)
+		if err == nil {
+			fmt.Println("Miller DSL script:")
+			fmt.Println(mlr)
+		}
 	}
 
 	// The .env needn't exist (most test cases don't have one) in which case
